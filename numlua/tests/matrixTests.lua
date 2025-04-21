@@ -106,10 +106,10 @@ local function test_sub_differentDimensions_throwsError()
     assert(err ~= nil)
 end
 
--- MARK: // Tested function: scaleMul
-local function test_scaleMul_withValidScalar_multipliesCorrectly()
+-- MARK: // Tested function: scale
+local function test_scale_withValidScalar_multipliesCorrectly()
     local a = matrix.new(2, 2, 1)
-    local result = a:scaleMul(10)
+    local result = a:scale(10)
 
     for i = 1, result.rows do
         for j = i, result.cols do
@@ -118,11 +118,11 @@ local function test_scaleMul_withValidScalar_multipliesCorrectly()
     end
 end
 
-local function test_scaleMul_withInvalidType_throwsError()
+local function test_scale_withInvalidType_throwsError()
     local a = matrix.new(2, 2, 1)
 
     local ok, err = pcall(function()
-        a:scaleMul({})
+        a:scale({})
     end)
 
     assert(not ok, "Expected error when multiplying matrix by scalar")
@@ -227,6 +227,18 @@ local function test_map_withNonFunction_throwsError()
     assert(err ~= nil)
 end
 
+-- MARK: // Tested function: flatten
+local function test_flatten_withTwoDimensionlMatrix_returnsArrayWithOneDimension()
+    local a = matrix.new(2, 2, 1)
+
+    local result = a:flatten()
+    assert(result.rows == 1, "Expected a single row")
+    assert(result.cols == a.rows * a.cols, "Expected cols match number of elements of original matrix")
+    for i = 1, result.cols do
+        assert(result.data[1][i] == 1, "Expected 1")
+    end
+end
+
 -- MARK: // Tested function: metamethods (__add, __sub, __mul)
 local function test_metamethod_add_usesAddMethod()
     local m1 = matrix.new(2, 2, 1)
@@ -297,14 +309,15 @@ local testPlan = {
     test_add_differentDimensions_throwsError,
     test_sub_sameDimensions_subtractsCorrectly,
     test_sub_differentDimensions_throwsError,
-    test_scaleMul_withValidScalar_multipliesCorrectly,
-    test_scaleMul_withInvalidType_throwsError,
+    test_scale_withValidScalar_multipliesCorrectly,
+    test_scale_withInvalidType_throwsError,
     test_dot_withCompatibleMatrices_computesDotProduct,
     test_dot_withIncompatibleMatrices_throwsError,
     test_transpose_squareMatrix_returnsTransposedMatrix,
     test_transpose_rectangularMatrix_returnsTransposedMatrix,
     test_map_withFunction_appliesFunctionToAllElements,
     test_map_withNonFunction_throwsError,
+    test_flatten_withTwoDimensionlMatrix_returnsArrayWithOneDimension,
     test_metamethod_add_usesAddMethod,
     test_metamethod_sub_usesSubMethod,
     test_metamethod_mul_withScalar_performsScalarMultiplication,

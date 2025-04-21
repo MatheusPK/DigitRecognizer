@@ -70,7 +70,7 @@ function matrix:sub(m)
     return result
 end
 
-function matrix:scaleMul(scalar)
+function matrix:scale(scalar)
     assert(type(scalar) == "number")
 
     local result = matrix.new(self.rows, self.cols)
@@ -120,15 +120,29 @@ function matrix:map(fn)
     return result
 end
 
+function matrix:flatten()
+    local result = matrix.new(1, self.rows * self.cols)
+
+    local index = 1
+    for i = 1, self.rows do
+        for j = 1, self.cols do
+            result.data[1][index] = self.data[i][j]
+            index = index + 1
+        end
+    end
+
+    return result
+end
+
 matrix.__add = function(a, b) return a:add(b) end
 
 matrix.__sub = function(a, b) return a:sub(b) end
 
 matrix.__mul = function(a, b)
     if type(a) == "number" then
-        return b:scaleMul(a)
+        return b:scale(a)
     elseif type(b) == "number" then
-        return a:scaleMul(b)
+        return a:scale(b)
     else
         return a:dot(b)
     end
