@@ -26,7 +26,7 @@ function matrix.new(rows, cols, fill)
     return setmetatable({ rows = rows, cols = cols, data = data }, matrix)
 end
 
-function matrix.random(rows, cols, seed)
+function matrix.random(rows, cols, seed, min, max)
     if seed then
         math.randomseed(seed)
     elseif not seeded then
@@ -34,13 +34,18 @@ function matrix.random(rows, cols, seed)
         seeded = true
     end
 
+    min = min or -1
+    max = max or 1
+
     local data = {}
     for i = 1, rows do
         data[i] = {}
         for j = 1, cols do
-            data[i][j] = math.random()
+            local r = math.random()
+            data[i][j] = min + (max - min) * r
         end
     end
+
     return setmetatable({ rows = rows, cols = cols, data = data }, matrix)
 end
 
