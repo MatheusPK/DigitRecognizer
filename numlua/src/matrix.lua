@@ -139,6 +139,19 @@ function matrix:flatten()
     return result
 end
 
+function matrix:hadamard(m)
+    assertIsMatrix(m)
+    assertMatricesMatchDimensions(self, m)
+
+    local result = matrix.new(self.rows, self.cols)
+    for i = 1, self.rows do
+        for j = 1, self.cols do
+            result.data[i][j] = self.data[i][j] * m.data[i][j]
+        end
+    end
+    return result
+end
+
 matrix.__add = function(a, b) return a:add(b) end
 
 matrix.__sub = function(a, b) return a:sub(b) end
